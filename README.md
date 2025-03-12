@@ -34,4 +34,12 @@ All executions of the program used a singular Eagle ID as the bitcoin block: 279
 
 ## Part 2
 
+#k=7:
+- xS = 20713561727964563
+- Hash = 00003eb86d08c400abe5d811958a7ccd7a79e9f8bb07a96e53201d9be09487cb
+- Time Elapsed = 1s
+- Num Trials = 44671
+
+  The cluster has _ machines, _ _ cores. In order to find the number of trials that needed to find the nonce, I modified the code slightly: I added a counter, which only counted the number of trials up until the correct answer was found, whereas previously, the code would just complete num_trials trials even if the correct answer was found earlier (it just stored all results and then found the correct one after). These edits can be found in src/main/scala/project_1/main.scala.
+
 ## Part 3
