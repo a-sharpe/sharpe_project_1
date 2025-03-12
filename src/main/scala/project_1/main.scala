@@ -44,6 +44,9 @@ object main{
     val conf = new SparkConf().setAppName("Project_1")
     val sc = new SparkContext(conf)
 
+    //counter variable for trials
+    val trialsAccumulator = sc.longAccumulator("Trials Counter")
+    
     val header_1 = args(0)
       //"this_is_a_bitcoin_block_of_xxxx_and_yyyy"
 
@@ -58,15 +61,27 @@ object main{
 
     val hash_result = nonce.map(x => (x.toString(), sha256Hash(x.toString()  + header_1 )))
 
-    val ans = hash_result.filter( { case (x: String,y: String)  => y.startsWith(zeroes_prefix) } )
-    ans.cache()
+    //val ans = hash_result.filter( { case (x: String,y: String)  => y.startsWith(zeroes_prefix) } )
+    //ans.cache()
+
+    //new variable for getting the answer that increments the counter for failed operations
+    //and stops calculations once the correct answer is found
+    //don't need ans.cache anymore bc we dont want to process all partitions - want to stop early
+    val ans = hash_result.filter { case (_, y) =>
+      val isValid = y.startsWith(zeroes_prefix)
+      if (!isValid) trialsAccumulator.add(1) // Only increment when no solution is found
+      isValid
+    }.take(1)
+
 
     println("==================================")
-    if(ans.count!=0)
+    //switch to ans.length bc its not a RDD anymore, is an array
+    if(ans.length!=0)
     {
-      println("found. count:"+ans.count)
+      println("found. count:"+ans.length)
       val out = ans.take(1)(0)
       println("("+out._1+header_1+","+ out._2+")")
+      println("Total trials taken: " + trialsAccumulator.value)
     }
     else
       println("did not find")
