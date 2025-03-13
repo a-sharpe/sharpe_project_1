@@ -43,3 +43,19 @@ All executions of the program used a singular Eagle ID as the bitcoin block: 279
   The cluster has 4 HDFS Data Nodes, of which the Metrics Explorer says 3.07 were running during job operations. Within each of the nodes, there were 7.86 YARN virtual cores. In order to find the number of trials that needed to find the nonce, I modified the code slightly: I added a counter, which only counted the number of trials up until the correct answer was found, whereas previously, the code would just complete num_trials trials even if the correct answer was found earlier (it just stored all results and then found the correct one after). These edits can be found in src/main/scala/project_1/main.scala.
 
 ## Part 3
+
+  I replaced the line for nonce generation with: val nonce = sc.range(1, trials + 1). Efficiency advantages of this sequential generation are: 
+  
+  - Ensures that all possible nonces in the given range are checked
+  - No risk of repeating numbers
+  - Some partitions may have duplicate numbers in the random approach
+  - If a valid nonce exists in the range, it will be found, whereas random could miss valid nonces
+
+  Some efficiency disadvantages are:
+
+  - Slower if the solution is near the end of the range
+  - Very slow for large search spaces
+
+  This approach is more efficient in certain cases, mainly when the range for our nonce is small, otherwise it could become very inefficent. 
+
+  
