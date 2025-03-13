@@ -1,4 +1,4 @@
-All executions of the program used a singular Eagle ID as the bitcoin block: 27964563.
+This is Alexander Sharpe's report for Project 1 of Large Scale Data Processing. All executions of the program use a singular Eagle ID as the bitcoin block: 27964563.
 
 ## Part 1
 
